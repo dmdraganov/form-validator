@@ -1,0 +1,8 @@
+{
+  "email": "The email field must be a valid email address.",
+  "phone": "The phone field must be a valid phone number.",
+  "password": "The password is not strong enough.",
+  "url": "The url field must be a valid URL.",
+  "date": "The date field must be a valid date.",
+  "required": "The field is required."
+}
