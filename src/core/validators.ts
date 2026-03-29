@@ -1,6 +1,6 @@
-import { validateFileSize, validateFileExtension, validateMimeType } from '../features/fileValidation';
-import { validateInn } from '../features/innValidation';
-import { validateSnils } from '../features/snilsValidation';
+import { validateFileSize, validateFileExtension, validateMimeType } from '../features/fileValidation.js';
+import { validateInn } from '../features/innValidation.js';
+import { validateSnils } from '../features/snilsValidation.js';
 
 export const email = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 

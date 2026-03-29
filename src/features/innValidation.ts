@@ -45,3 +45,34 @@ export const validateInn = (inn: string): boolean => {
 
   return false;
 }
+
+export const applyInnMask = (event: Event): void => {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/\D/g, '');
+  let maskedValue = '';
+
+  if (value.length > 10) { // If input is longer than 10 digits, assume 12-digit INN format
+    // XXXX-XXXXXX-XX
+    maskedValue = value.slice(0, 4);
+    if (value.length > 4) {
+      maskedValue += `-${value.slice(4, 10)}`;
+    }
+    if (value.length > 10) {
+      maskedValue += `-${value.slice(10, 12)}`;
+    }
+  } else { // Assume 10-digit INN format for shorter inputs
+    // XX-XXX-XXX-XX
+    maskedValue = value.slice(0, 2);
+    if (value.length > 2) {
+      maskedValue += `-${value.slice(2, 5)}`;
+    }
+    if (value.length > 5) {
+      maskedValue += `-${value.slice(5, 8)}`;
+    }
+    if (value.length > 8) {
+      maskedValue += `-${value.slice(8, 10)}`;
+    }
+  }
+
+  input.value = maskedValue;
+};

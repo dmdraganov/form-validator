@@ -94,9 +94,22 @@ phoneInput.addEventListener('input', applyPhoneMask);
 
 const cardInput = document.getElementById('credit-card');
 cardInput.addEventListener('input', applyCreditCardMask);
+
+const dateInput = document.getElementById('date');
+dateInput.addEventListener('input', applyDateMask);
 ```
 
-### Валидация СНИЛС
+### Пример использования
+
+Чтобы запустить демонстрационный проект:
+
+1.  Соберите библиотеку: `npm run build`
+2.  Перейдите в директорию `example`: `cd example`
+3.  Откройте файл `index.html` в вашем браузере.
+
+Это простая форма регистрации, демонстрирующая валидацию email, телефона, пароля (с подтверждением и проверкой надежности), ИНН и СНИЛС. Ошибки валидации отображаются под соответствующими полями.
+
+### Валидация файлов
 
 ```javascript
 import { FormValidator } from 'form-validator';
@@ -209,5 +222,6 @@ validator.validateField('avatar', imageFile).then(isValid => {
 -   `calculatePasswordStrength(password)`
 -   `applyPhoneMask(event)`
 -   `applyCreditCardMask(event)`
+-   `applyDateMask(event)`
 -   `DependentFields`
 -   `setLocale(locale)`

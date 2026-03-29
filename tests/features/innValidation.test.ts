@@ -1,4 +1,4 @@
-import { validateInn } from '../../src/features/innValidation';
+import { validateInn, applyInnMask } from '../../src/features/innValidation';
 
 describe('INN Validation', () => {
   it('should return true for a valid 10-digit INN', () => {
@@ -23,5 +23,47 @@ describe('INN Validation', () => {
 
   it('should return false for an INN with non-digit characters', () => {
     expect(validateInn('123a')).toBe(false);
+  });
+});
+
+describe('INN Mask', () => {
+  it('should apply a 10-digit INN mask to a string', () => {
+    const event = {
+      target: {
+        value: '1234567890',
+      },
+    } as unknown as Event;
+    applyInnMask(event);
+    expect((event.target as HTMLInputElement).value).toBe('12-345-678-90');
+  });
+
+  it('should apply a 12-digit INN mask to a string', () => {
+    const event = {
+      target: {
+        value: '123456789012',
+      },
+    } as unknown as Event;
+    applyInnMask(event);
+    expect((event.target as HTMLInputElement).value).toBe('1234-567890-12');
+  });
+
+  it('should handle partial 10-digit INN input', () => {
+    const event = {
+      target: {
+        value: '12345',
+      },
+    } as unknown as Event;
+    applyInnMask(event);
+    expect((event.target as HTMLInputElement).value).toBe('12-345');
+  });
+
+  it('should handle partial 12-digit INN input (interpreted as 10-digit mask)', () => {
+    const event = {
+      target: {
+        value: '1234567',
+      },
+    } as unknown as Event;
+    applyInnMask(event);
+    expect((event.target as HTMLInputElement).value).toBe('12-345-67');
   });
 });

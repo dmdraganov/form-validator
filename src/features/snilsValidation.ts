@@ -34,3 +34,24 @@ export const validateSnils = (snils: string): boolean => {
 
   return calculatedControlDigits === controlDigitsInput;
 }
+
+export const applySnilsMask = (event: Event): void => {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/\D/g, '');
+  let maskedValue = '';
+
+  if (value.length > 0) {
+    maskedValue += value.slice(0, 3);
+  }
+  if (value.length > 3) {
+    maskedValue += `-${value.slice(3, 6)}`;
+  }
+  if (value.length > 6) {
+    maskedValue += `-${value.slice(6, 9)}`;
+  }
+  if (value.length > 9) {
+    maskedValue += ` ${value.slice(9, 11)}`;
+  }
+
+  input.value = maskedValue;
+};

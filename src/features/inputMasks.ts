@@ -36,3 +36,21 @@ export const applyCreditCardMask = (event: Event): void => {
 
   input.value = maskedValue;
 };
+
+export const applyDateMask = (event: Event): void => {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/\D/g, '');
+  let maskedValue = '';
+
+  if (value.length > 0) {
+    maskedValue += value.slice(0, 4);
+  }
+  if (value.length > 4) {
+    maskedValue += `-${value.slice(4, 6)}`;
+  }
+  if (value.length > 6) {
+    maskedValue += `-${value.slice(6, 8)}`;
+  }
+
+  input.value = maskedValue;
+};

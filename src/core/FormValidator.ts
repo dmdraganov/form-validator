@@ -1,5 +1,5 @@
-import * as validators from './validators';
-import { setLocale as setLocalizationLocale, getMessage } from '../features/localization';
+import * as validators from './validators.js';
+import { setLocale as setLocalizationLocale, getMessage } from '../features/localization.js';
 
 type Validator = (value: any, options?: any) => boolean | Promise<boolean>;
 

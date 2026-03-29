@@ -1,4 +1,4 @@
-import { FormValidator } from '../core/FormValidator';
+import { FormValidator } from '../core/FormValidator.js';
 
 export class DependentFields {
   private validator: FormValidator;
