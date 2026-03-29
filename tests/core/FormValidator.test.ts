@@ -1,21 +1,24 @@
-import { FormValidator } from '../../src/core/FormValidator.js';
+import { FormValidator } from '../../src/core/FormValidator';
 
 describe('FormValidator', () => {
-  let validator;
+  let validator: FormValidator;
 
   beforeEach(() => {
     validator = new FormValidator();
   });
 
-  it('should add a rule', () => {
+  it('should add a rule and validate against it', async () => {
     validator.addRule('email', 'email');
-    expect(validator.rules.email).toEqual([{ rule: 'email', options: {} }]);
+    const isValid = await validator.validateField('email', 'test@example.com');
+    expect(isValid).toBe(true);
   });
 
-  it('should set a custom validator', () => {
-    const customValidator = (value) => value === 'custom';
+  it('should set a custom validator and use it', async () => {
+    const customValidator = (value: string) => value === 'custom';
     validator.setCustomValidator('custom', customValidator);
-    expect(validator.customValidators.custom).toBe(customValidator);
+    validator.addRule('customField', 'custom');
+    const isValid = await validator.validateField('customField', 'custom');
+    expect(isValid).toBe(true);
   });
 
   it('should validate a field successfully', async () => {
@@ -54,13 +57,5 @@ describe('FormValidator', () => {
     expect(isValid).toBe(false);
     expect(validator.errors.email).toEqual(['The email field must be a valid email address.']);
     expect(validator.errors.password).toEqual(['The password is not strong enough.']);
-  });
-
-  it('should use a custom validator', async () => {
-    const customValidator = (value) => value === 'custom';
-    validator.setCustomValidator('custom', customValidator);
-    validator.addRule('customField', 'custom');
-    const isValid = await validator.validateField('customField', 'custom');
-    expect(isValid).toBe(true);
   });
 });

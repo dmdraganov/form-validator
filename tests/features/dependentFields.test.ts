@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
-import { FormValidator } from '../../src/core/FormValidator.js';
-import { DependentFields } from '../../src/features/dependentFields.js';
+import { FormValidator } from '../../src/core/FormValidator';
+import { DependentFields } from '../../src/features/dependentFields';
 
 describe('DependentFields', () => {
   it('should trigger validation on a dependent field', async () => {
@@ -9,7 +9,7 @@ describe('DependentFields', () => {
 
     validator.addRule('password', 'password');
     validator.addRule('passwordConfirmation', 'required');
-    validator.setCustomValidator('confirmation', (value, options) => {
+    validator.setCustomValidator('confirmation', (value: string, options: { target: string }) => {
       return value === options.target;
     });
     validator.addRule('passwordConfirmation', 'confirmation', { target: 'password' });

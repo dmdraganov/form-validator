@@ -1,30 +1,53 @@
-import * as validators from './validators.js';
-import { setLocale as setLocalizationLocale, getMessage } from '../features/localization.js';
+import * as validators from './validators';
+import { setLocale as setLocalizationLocale, getMessage } from '../features/localization';
+
+type Validator = (value: any, options?: any) => boolean | Promise<boolean>;
+
+interface Rule {
+  rule: string;
+  options?: any;
+}
+
+interface Rules {
+  [key: string]: Rule[];
+}
+
+interface CustomValidators {
+  [key: string]: Validator;
+}
+
+interface Errors {
+  [key: string]: string[];
+}
 
 export class FormValidator {
-  constructor(rules = {}, customValidators = {}, locale = 'en') {
+  private rules: Rules;
+  private customValidators: CustomValidators;
+  public errors: Errors;
+
+  constructor(rules: Rules = {}, customValidators: CustomValidators = {}, locale = 'en') {
     this.rules = rules;
     this.customValidators = customValidators;
     this.errors = {};
     this.setLocale(locale);
   }
 
-  setLocale(locale) {
+  setLocale(locale: string): void {
     setLocalizationLocale(locale);
   }
 
-  addRule(field, rule, options = {}) {
+  addRule(field: string, rule: string, options: any = {}): void {
     if (!this.rules[field]) {
       this.rules[field] = [];
     }
     this.rules[field].push({ rule, options });
   }
 
-  setCustomValidator(name, validator) {
+  setCustomValidator(name: string, validator: Validator): void {
     this.customValidators[name] = validator;
   }
 
-  async validateField(field, value) {
+  async validateField(field: string, value: any): Promise<boolean> {
     this.errors[field] = [];
     const fieldRules = this.rules[field];
 
@@ -33,7 +56,7 @@ export class FormValidator {
     }
 
     for (const { rule, options } of fieldRules) {
-      const validator = this.customValidators[rule] || validators[rule];
+      const validator = this.customValidators[rule] || (validators as any)[rule];
       if (validator) {
         const isValid = await validator(value, options);
         if (!isValid) {
@@ -45,7 +68,7 @@ export class FormValidator {
     return this.errors[field].length === 0;
   }
 
-  async validateForm(form) {
+  async validateForm(form: { [key: string]: any }): Promise<boolean> {
     this.errors = {};
     const fields = Object.keys(this.rules);
     for (const field of fields) {

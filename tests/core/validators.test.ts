@@ -1,4 +1,4 @@
-import { email, phone, password, url, date } from '../../src/core/validators.js';
+import { email, phone, password, url, date } from '../../src/core/validators';
 
 describe('Validators', () => {
   describe('email', () => {

@@ -1,5 +1,5 @@
-export const applyPhoneMask = (event) => {
-  let input = event.target;
+export const applyPhoneMask = (event: Event): void => {
+  const input = event.target as HTMLInputElement;
   let value = input.value.replace(/\D/g, '');
   let maskedValue = '+';
 
@@ -17,6 +17,21 @@ export const applyPhoneMask = (event) => {
     if (value.length > 9) {
       maskedValue += `-${value.slice(9, 11)}`;
     }
+  }
+
+  input.value = maskedValue;
+};
+
+export const applyCreditCardMask = (event: Event): void => {
+  const input = event.target as HTMLInputElement;
+  let value = input.value.replace(/\D/g, '').substring(0, 16);
+  let maskedValue = '';
+
+  for (let i = 0; i < value.length; i++) {
+    if (i > 0 && i % 4 === 0) {
+      maskedValue += '-';
+    }
+    maskedValue += value[i];
   }
 
   input.value = maskedValue;

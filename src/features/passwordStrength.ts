@@ -1,4 +1,4 @@
-export const calculatePasswordStrength = (password) => {
+export const calculatePasswordStrength = (password: string): number => {
   const strengthPoints = [
     password.length >= 8,
     /[A-Z]/.test(password),

@@ -1,4 +1,4 @@
-import { calculatePasswordStrength } from '../../src/features/passwordStrength.js';
+import { calculatePasswordStrength } from '../../src/features/passwordStrength';
 
 describe('calculatePasswordStrength', () => {
   it('should return 0 for an empty password', () => {

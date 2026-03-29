@@ -8,9 +8,9 @@
 -   **Пользовательские правила:** Легко добавляйте свои собственные правила валидации.
 -   **Асинхронная валидация:** Поддержка валидаторов, возвращающих Promise.
 -   **Зависимые поля:** Запускайте валидацию для поля при изменении связанного поля.
--   **Маски ввода:** Применяйте маски к полям ввода с помощью [imask](https://imask.js.org/).
 -   **Индикатор надежности пароля:** Функция для расчета надежности пароля.
 -   **Локализация:** Сообщения об ошибках могут быть переведены на разные языки (по умолчанию поддерживаются английский и русский).
+-   **Поддержка TypeScript:** Библиотека написана на TypeScript и включает в себя все необходимые типы.
 
 ## Установка
 
@@ -84,13 +84,76 @@ import { calculatePasswordStrength } from 'form-validator';
 const strength = calculatePasswordStrength('Password123!'); // 5
 ```
 
-### Маски ввода (Телефон)
+### Маски ввода
 
 ```javascript
-import { applyPhoneMask } from 'form-validator';
+import { applyPhoneMask, applyCreditCardMask } from 'form-validator';
 
 const phoneInput = document.getElementById('phone');
 phoneInput.addEventListener('input', applyPhoneMask);
+
+const cardInput = document.getElementById('credit-card');
+cardInput.addEventListener('input', applyCreditCardMask);
+```
+
+### Валидация СНИЛС
+
+```javascript
+import { FormValidator } from 'form-validator';
+
+const validator = new FormValidator();
+
+validator.addRule('snils', 'snils');
+
+validator.validateField('snils', '112-233-445 95').then(isValid => {
+  if (isValid) {
+    console.log('SNILS is valid');
+  } else {
+    console.log('SNILS is invalid', validator.errors);
+  }
+});
+```
+
+### Валидация ИНН
+
+```javascript
+import { FormValidator } from 'form-validator';
+
+const validator = new FormValidator();
+
+validator.addRule('inn', 'inn');
+
+validator.validateField('inn', '500100732259').then(isValid => {
+  if (isValid) {
+    console.log('INN is valid');
+  } else {
+    console.log('INN is invalid', validator.errors);
+  }
+});
+```
+
+### Валидация файлов
+
+```javascript
+import { FormValidator } from 'form-validator';
+
+const validator = new FormValidator();
+
+const imageFile = new File(['(⌐□_□)'], 'chucknorris.png', { type: 'image/png' });
+
+validator.addRule('avatar', 'file', {
+  maxSize: 1024 * 1024, // 1MB
+  allowedExtensions: ['jpg', 'png'],
+  allowedMimeTypes: ['image/jpeg', 'image/png'],
+});
+
+validator.validateField('avatar', imageFile).then(isValid => {
+  if (isValid) {
+    console.log('File is valid');
+  } else {
+    console.log('File is invalid', validator.errors);
+  }
+});
 ```
 
 ## API
@@ -136,11 +199,15 @@ phoneInput.addEventListener('input', applyPhoneMask);
 -   `password`
 -   `url`
 -   `date`
+-   `file`
+-   `inn`
+-   `snils`
 -   `required`
 
 ### Другие функции
 
 -   `calculatePasswordStrength(password)`
 -   `applyPhoneMask(event)`
+-   `applyCreditCardMask(event)`
 -   `DependentFields`
 -   `setLocale(locale)`

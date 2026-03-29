@@ -1,17 +1,21 @@
+import { FormValidator } from '../core/FormValidator';
+
 export class DependentFields {
-  constructor(validator) {
+  private validator: FormValidator;
+  private dependencies: { [key: string]: string[] } = {};
+
+  constructor(validator: FormValidator) {
     this.validator = validator;
-    this.dependencies = {};
   }
 
-  addDependency(field, dependsOn) {
+  addDependency(field: string, dependsOn: string): void {
     if (!this.dependencies[dependsOn]) {
       this.dependencies[dependsOn] = [];
     }
     this.dependencies[dependsOn].push(field);
   }
 
-  fieldChanged(fieldName, form) {
+  fieldChanged(fieldName: string, form: { [key: string]: any }): void {
     const fieldsToValidate = this.dependencies[fieldName];
     if (fieldsToValidate) {
       fieldsToValidate.forEach((field) => {

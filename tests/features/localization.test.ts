@@ -1,4 +1,4 @@
-import { FormValidator } from '../../src/core/FormValidator.js';
+import { FormValidator } from '../../src/core/FormValidator';
 
 describe('Localization', () => {
   it('should return English error messages by default', async () => {

@@ -1,10 +1,10 @@
-import { FormValidator } from '../../src/core/FormValidator.js';
+import { FormValidator } from '../../src/core/FormValidator';
 
 describe('Async Validation', () => {
   it('should handle asynchronous validators', async () => {
     const validator = new FormValidator();
 
-    const asyncValidator = (value) => {
+    const asyncValidator = (value: string): Promise<boolean> => {
       return new Promise((resolve) => {
         setTimeout(() => {
           resolve(value === 'async');
