@@ -1,65 +1,304 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Пример использования Form Validator</title>
-  <style>
-    body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; }
-    .container { max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-    .form-group { margin-bottom: 1rem; }
-    label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
-    input { width: calc(100% - 16px); padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-    .error { color: red; font-size: 0.8rem; margin-top: 0.25rem; min-height: 1.2rem; }
-    button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-    button:hover { background-color: #0056b3; }
-    .success-message { color: green; font-weight: bold; margin-top: 1rem; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <h1>Форма регистрации</h1>
-    <form id="registration-form">
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email">
-        <div class="error" id="email-error"></div>
-      </div>
-      <div class="form-group">
-        <label for="phone">Телефон</label>
-        <input type="tel" id="phone" name="phone">
-        <div class="error" id="phone-error"></div>
-      </div>
-      <div class="form-group">
-        <label for="password">Пароль</label>
-        <input type="password" id="password" name="password">
-        <div class="error" id="password-error"></div>
-      </div>
-      <div class="form-group">
-        <label for="password-confirm">Подтверждение пароля</label>
-        <input type="password" id="password-confirm" name="password-confirm">
-        <div class="error" id="password-confirm-error"></div>
-      </div>
-      <div class="form-group">
-        <label for="inn">ИНН</label>
-        <input type="text" id="inn" name="inn">
-        <div class="error" id="inn-error"></div>
-      </div>
-      <div class="form-group">
-        <label for="snils">СНИЛС</label>
-        <input type="text" id="snils" name="snils">
-        <div class="error" id="snils-error"></div>
-      </div>
-      <div class="form-group">
-        <label for="date">Дата (ГГГГ-ММ-ДД)</label>
-        <input type="text" id="date" name="date">
-        <div class="error" id="date-error"></div>
-      </div>
-      <button type="submit">Зарегистрироваться</button>
-      <div class="success-message" id="success-message"></div>
-    </form>
-  </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тестирование валидаторов Form Validator</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
 
-  <script type="module" src="app.js"></script>
-</body>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f2f5;
+        color: #333;
+        min-height: 100vh;
+      }
+
+      .main-container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 24px;
+      }
+
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .tab-btn {
+        padding: 8px 16px;
+        background-color: #e8eaf0;
+        border: 1px solid #c4c7d0;
+        cursor: pointer;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .tab-btn.active {
+        background-color: #d0d4e0;
+      }
+
+      .test-section {
+        display: none;
+      }
+
+      .test-section.active {
+        display: block;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+      }
+
+      .test-cases {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 10px;
+      }
+
+      .test-case {
+        background-color: #f9f9fb;
+        padding: 10px;
+        border: 1px solid #d1d4db;
+      }
+
+      .test-case h4 {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+      }
+
+      .test-input {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid #ccc;
+        font-size: 13px;
+        margin-bottom: 6px;
+      }
+
+      .test-btn {
+        width: 100%;
+        padding: 8px;
+        background-color: #e8eaf0;
+        border: 1px solid #c4c7d0;
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .test-btn.success {
+        background-color: #dff0d8;
+      }
+
+      .test-btn.error {
+        background-color: #f8d7da;
+      }
+
+      .test-result {
+        margin-top: 6px;
+        padding: 6px;
+        font-size: 13px;
+        display: none;
+      }
+
+      .test-result.show {
+        display: block;
+      }
+
+      .test-result.pass {
+        color: #155724;
+      }
+
+      .test-result.fail {
+        color: #721c24;
+      }
+
+      .form-group {
+        margin-bottom: 12px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 4px;
+        font-weight: bold;
+      }
+
+      input[type="text"],
+      input[type="email"],
+      input[type="tel"],
+      input[type="password"],
+      input[type="date"],
+      textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+      }
+
+      .error {
+        color: #a00;
+        font-size: 13px;
+        min-height: 18px;
+        margin-top: 2px;
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #d0d4e0;
+        border: 1px solid #999;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .submit-btn:hover {
+        background-color: #b8bdd2;
+      }
+
+      .success-message {
+        color: #155724;
+        font-weight: bold;
+        margin-top: 10px;
+        padding: 10px;
+        background-color: #e6f4ea;
+        border: 1px solid #c3e6cb;
+        display: none;
+      }
+
+      .description {
+        font-size: 13px;
+        color: #555;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main-container">
+      <h1>Тестирование валидаторов Form Validator</h1>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="email-test">Email</button>
+        <button class="tab-btn" data-tab="phone-test">Телефон</button>
+        <button class="tab-btn" data-tab="password-test">Пароль</button>
+        <button class="tab-btn" data-tab="date-test">Дата</button>
+        <button class="tab-btn" data-tab="inn-test">ИНН</button>
+        <button class="tab-btn" data-tab="snils-test">СНИЛС</button>
+        <button class="tab-btn" data-tab="url-test">URL</button>
+        <button class="tab-btn" data-tab="form-test">Форма</button>
+      </div>
+
+      <div id="email-test" class="test-section active container">
+        <h2>Email Валидация</h2>
+        <p class="description">Проверка различных форматов email адресов</p>
+        <div class="test-cases" id="email-cases"></div>
+      </div>
+
+      <div id="phone-test" class="test-section container">
+        <h2>Телефон Валидация</h2>
+        <p class="description">
+          Проверка различных форматов телефонных номеров
+        </p>
+        <div class="test-cases" id="phone-cases"></div>
+      </div>
+
+      <div id="password-test" class="test-section container">
+        <h2>Пароль Валидация</h2>
+        <p class="description">
+          Проверка сложности пароля с различными требованиями
+        </p>
+        <div class="test-cases" id="password-cases"></div>
+      </div>
+
+      <div id="date-test" class="test-section container">
+        <h2>Дата Валидация</h2>
+        <p class="description">
+          Проверка различных форматов дат и граничных случаев
+        </p>
+        <div class="test-cases" id="date-cases"></div>
+      </div>
+
+      <div id="inn-test" class="test-section container">
+        <h2>ИНН Валидация</h2>
+        <p class="description">Проверка российского ИНН (10 и 12 цифр)</p>
+        <div class="test-cases" id="inn-cases"></div>
+      </div>
+
+      <div id="snils-test" class="test-section container">
+        <h2>СНИЛС Валидация</h2>
+        <p class="description">Проверка российского СНИЛС (11 цифр)</p>
+        <div class="test-cases" id="snils-cases"></div>
+      </div>
+
+      <div id="url-test" class="test-section container">
+        <h2>URL Валидация</h2>
+        <p class="description">Проверка различных форматов URL</p>
+        <div class="test-cases" id="url-cases"></div>
+      </div>
+
+      <div id="form-test" class="test-section container">
+        <h2>Полная форма регистрации</h2>
+        <form id="registration-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" />
+            <div class="error" id="email-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="phone">Телефон</label>
+            <input type="tel" id="phone" name="phone" />
+            <div class="error" id="phone-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" />
+            <div class="error" id="password-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="password-confirm">Подтверждение пароля</label>
+            <input
+              type="password"
+              id="password-confirm"
+              name="password-confirm"
+            />
+            <div class="error" id="password-confirm-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="inn">ИНН</label>
+            <input type="text" id="inn" name="inn" />
+            <div class="error" id="inn-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="snils">СНИЛС</label>
+            <input type="text" id="snils" name="snils" />
+            <div class="error" id="snils-error"></div>
+          </div>
+          <div class="form-group">
+            <label for="date">Дата (ГГГГ-ММ-ДД)</label>
+            <input type="text" id="date" name="date" />
+            <div class="error" id="date-error"></div>
+          </div>
+          <button type="submit" class="submit-btn">Зарегистрироваться</button>
+          <div class="success-message" id="success-message">
+            Форма успешно отправлена!
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script type="module" src="app.js"></script>
+  </body>
 </html>
