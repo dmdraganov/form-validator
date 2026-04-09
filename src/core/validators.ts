@@ -1,10 +1,26 @@
-import { validateFileSize, validateFileExtension, validateMimeType } from '../features/fileValidation.js';
-import { validateInn } from '../features/innValidation.js';
-import { validateSnils } from '../features/snilsValidation.js';
+import {
+  validateFileSize,
+  validateFileExtension,
+  validateMimeType,
+} from "../features/fileValidation.js";
+import { validateInn } from "../features/innValidation.js";
+import { validateSnils } from "../features/snilsValidation.js";
 
-export const email = (value: string): boolean => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+export const email = (value: string): boolean =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
-export const phone = (value: string): boolean => /^\+[1-9]\d{1,14}$/.test(value);
+export const phone = (value: string): boolean => {
+  if (typeof value !== "string") return false;
+
+  if (/[^0-9+\-\s()]/.test(value)) {
+    return false;
+  }
+
+  const hasPlus = value.trim().startsWith("+");
+  const normalized = (hasPlus ? "+" : "") + value.replace(/\D/g, "");
+
+  return /^\+[1-9]\d{9,14}$/.test(normalized);
+};
 
 interface PasswordOptions {
   minLength?: number;
@@ -14,7 +30,10 @@ interface PasswordOptions {
   requireSymbols?: boolean;
 }
 
-export const password = (value: string, options: PasswordOptions = {}): boolean => {
+export const password = (
+  value: string,
+  options: PasswordOptions = {},
+): boolean => {
   const {
     minLength = 8,
     requireUppercase = true,
@@ -37,18 +56,18 @@ export const password = (value: string, options: PasswordOptions = {}): boolean 
   );
 };
 
-// A simple URL regex. For production, consider a more robust library like `validator.js`.
 export const url = (value: string): boolean => {
-  return /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?.*)?$/.test(value);
+  return /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?.*)?$/.test(
+    value,
+  );
 };
 
 interface DateOptions {
   format?: string;
 }
 
-// This is a simple date validation. For production, consider a more robust library like `date-fns` or `moment.js`.
 export const date = (value: string, options: DateOptions = {}): boolean => {
-  const { format = 'YYYY-MM-DD' } = options;
+  const { format = "YYYY-MM-DD" } = options;
   const parts = value.split(/[-/.]/);
   const formatParts = format.split(/[-/.]/);
   const dateObj: { [key: string]: number } = {};
@@ -62,7 +81,7 @@ export const date = (value: string, options: DateOptions = {}): boolean => {
   }
 
   const d = new Date(dateObj.YYYY, dateObj.MM - 1, dateObj.DD);
-  return d && (d.getMonth() + 1) === dateObj.MM;
+  return d && d.getMonth() + 1 === dateObj.MM;
 };
 
 interface FileOptions {
